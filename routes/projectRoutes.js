@@ -36,22 +36,30 @@ router.get("/", (req, res) => {
     });
 });
 
-// GET to /api/projects/id
+// GET to /api/projects/:id
 router.get("/:id", (req, res) => {
   db("projects")
     .where("id", req.params.id)
     .first()
     .then(projectRes => {
-      const { id, name, description, completed } = projectRes;
+      if (!projectRes) {
+        res
+          .status(404)
+          .json({
+            error: `A project with ID ${req.params.id} does not exist.`
+          });
+      } else {
+        const { id, name, description, completed } = projectRes;
 
-      db("actions")
-        .select("id", "action_name as description", "notes", "completed")
-        .where("project_id", projectRes.id)
-        .then(actionsRes => {
-          res
-            .status(200)
-            .json({ id, name, description, completed, actions: actionsRes });
-        });
+        db("actions")
+          .select("id", "action_name as description", "notes", "completed")
+          .where("project_id", projectRes.id)
+          .then(actionsRes => {
+            res
+              .status(200)
+              .json({ id, name, description, completed, actions: actionsRes });
+          });
+      }
     })
     .catch(err => {
       res.status(500).send("There was an error retrieving the data.");
@@ -66,11 +74,9 @@ router.put("/:id", (req, res) => {
     .update(req.body)
     .then(count => {
       if (count === 0) {
-        res
-          .status(404)
-          .json({
-            error: `A project with ID ${req.params.id} does not exist.`
-          });
+        res.status(404).json({
+          error: `A project with ID ${req.params.id} does not exist.`
+        });
       } else {
         db("projects")
           .where("id", req.params.id)
