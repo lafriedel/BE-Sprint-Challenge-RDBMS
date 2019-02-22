@@ -29,9 +29,22 @@ This will be akin to the Web API that you built in the last sprint, only this ti
 Demonstrate your understanding of this week's concepts by answering the following free-form questions. Edit this document to include your answers after each question. Make sure to leave a blank line above and below your answer so it is clear and easy to read by your project manager.
 
 1. Explain the difference between `RDBMS` and `SQL`.
+
+RDBMS stands for Relational DataBase Management System, and it is a piece of software that provides a GUI environment for creating, editing, and managing database tables. We've been using the SQLiteStudio software to practice this in class. 
+
+SQL, or Structural Query Language, is a language standard that is used to communicate with a RDBMS. It is most commonly used to modify database objects (tables), manipulate data inside those objects (inserting, updating, deleting, etc), and query, filter, join, and sort (among other actions) data. There are various SQL vendors, and the one we use in class is SQLite due to its ease of use/deployment and simplicity.
+
 1. Why do tables need a `primary key`?
+
+Each row of data in a table needs a primary key, because each row needs a unique identifier. For example, there may be multiple records with identical information in other columns, but having a primary key allows the selection of the correct record. This helps create data normalization in the First Normal Form, so that tables are independent of other related data.
+
 1. What is the name given to a table column that references the primary key on another table.
+
+That column can be named whatever it wants, but it has on it a foreign key.
+
 1. What do we need in order to have a _many to many_ relationship between two tables.
+
+The best way to maintain data normalization for a many-to-many relationship is to have a third table that bridges the two tables. This new table has (at minimum) two columns, where each column has a foreign key that ties to the unique primary key ID within each table. This creates two one-to-many relationships from the new table to both related tables.
 
 ## Project Set Up
 
