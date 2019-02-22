@@ -91,6 +91,39 @@ router.put("/:id", (req, res) => {
     });
 });
 
-// DELETE to /api/projects/:id
+// DELETE to /api/projects/:id -- incomplete, incorrect code
+router.delete("/:id", (req, res) => {
+    db("projects")
+      .where("id", req.params.id)
+      .first()
+      .then(project => {
+        if (!project) {
+          res
+            .status(404)
+            .json({
+              error: `A project with ID ${req.params.id} does not exist.`
+            });
+        } else {
+
+          const projectActions = db("actions").where("project_id", req.params.id);
+
+            if (projectActions.length > 0) {
+                // this is going to break here because the i doesn't match the id of the action
+                for (let i = 1; i < projectActions.length; i++) {
+                    db("actions").where("id", i).del();
+                }
+            };
+
+            db("projects").where("id", req.params.id).del().then(count => {
+                if (count > 0) {
+                    res.status(204).end();
+                }
+            })
+        }
+      })
+      .catch(err => {
+        res.status(500).send("There was an error deleting the data.");
+      });
+  });
 
 module.exports = router;
