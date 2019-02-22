@@ -61,6 +61,28 @@ router.get("/:id", (req, res) => {
 });
 
 // PUT /api/actions/:id
+router.put("/:id", (req, res) => {
+    db("actions")
+      .where("id", req.params.id)
+      .update(req.body)
+      .then(count => {
+        if (count === 0) {
+          res.status(404).json({
+            error: `An action with ID ${req.params.id} does not exist.`
+          });
+        } else {
+          db("actions")
+            .where("id", req.params.id)
+            .first()
+            .then(action => {
+              res.status(200).json(action);
+            });
+        }
+      })
+      .catch(err => {
+        res.status(500).send("There was an error updating the project.");
+      });
+  });
 
 // DELETE /api/actions/:id
 
