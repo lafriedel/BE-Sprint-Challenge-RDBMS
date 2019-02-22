@@ -15,6 +15,12 @@ server.get("/", (req, res) => {
 
 // POST to /api/projects
 server.post("/api/projects", (req, res) => {
+  const { name } = req.body;
+
+  if (!name) {
+    return res.status(400).send("You must submit a project name.");
+  }
+
   db("projects")
     .insert(req.body)
     .then(projid => {
@@ -28,6 +34,12 @@ server.post("/api/projects", (req, res) => {
 
 // POST to /api/actions
 server.post("/api/actions", (req, res) => {
+    const { action_name, project_id } = req.body;
+
+  if (!action_name || !project_id) {
+    return res.status(400).send("You must submit an action name and project ID.");
+  }
+
   db("actions")
     .insert(req.body)
     .then(actionid => {
@@ -45,14 +57,16 @@ server.get("/api/projects/:id", (req, res) => {
     .where("id", req.params.id)
     .first()
     .then(projectRes => {
-        const {id, name, description, completed } = projectRes;
-        
+      const { id, name, description, completed } = projectRes;
+
       db("actions")
         .select("id", "action_name as description", "notes", "completed")
         .where("project_id", projectRes.id)
         .then(actionsRes => {
-          res.status(200).json({ id, name, description, completed, actions: actionsRes });
-        })
+          res
+            .status(200)
+            .json({ id, name, description, completed, actions: actionsRes });
+        });
     })
     .catch(err => {
       res.status(500).send("There was an error retrieving the data.");
