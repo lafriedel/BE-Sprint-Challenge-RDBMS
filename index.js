@@ -23,7 +23,17 @@ server.post("/api/projects", (req, res) => {
             res.status(500).send("There was an error adding the project.");
         });
 })
+
 // POST to /api/actions
+server.post("/api/actions", (req, res) => {
+    db("actions").insert(req.body)
+        .then(actionid => {
+            const [id] = actionid;
+            res.status(201).json({id: id});
+        }).catch(err => {
+            res.status(500).send("There was an error adding the project.");
+        });
+})
 
 // GET to /api/project/id
 
