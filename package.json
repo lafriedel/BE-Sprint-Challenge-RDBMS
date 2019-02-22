@@ -1,0 +1,20 @@
+{
+  "name": "Sprint-Challenge-RDBMS",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "server": "nodemon"
+  },
+  "repository": "https://github.com/lafriedel/Sprint-Challenge-RDBMS.git",
+  "author": "Leigh-Ann Friedel <leigh.ann.friedel@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.16.4",
+    "helmet": "^3.15.1",
+    "knex": "^0.16.3",
+    "sqlite": "^3.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.10"
+  }
+}
