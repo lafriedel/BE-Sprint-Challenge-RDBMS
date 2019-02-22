@@ -9,6 +9,25 @@ const db = knex(knexConfig.development);
 server.use(helmet());
 server.use(express.json());
 
+server.get("/", (req, res) => {
+    res.status(200).send("Welcome to the Getting Things Done API.");
+})
+
+// POST to /api/projects
+server.post("/api/projects", (req, res) => {
+    db("projects").insert(req.body)
+        .then(projid => {
+            const [id] = projid;
+            res.status(201).json({id: id});
+        }).catch(err => {
+            res.status(500).send("There was an error adding the project.");
+        });
+})
+// POST to /api/actions
+
+// GET to /api/project/id
+
+
 server.listen(8000, (req, res) => {
     console.log("Server listening on port 8000");
 })
