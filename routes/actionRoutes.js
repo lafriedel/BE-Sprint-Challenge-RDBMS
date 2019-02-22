@@ -48,11 +48,9 @@ router.get("/:id", (req, res) => {
       if (action) {
         res.status(200).json(action);
       } else {
-        res
-          .status(404)
-          .json({
-            error: `An action with ID ${req.params.id} does not exist.`
-          });
+        res.status(404).json({
+          error: `An action with ID ${req.params.id} does not exist.`
+        });
       }
     })
     .catch(err => {
@@ -62,28 +60,47 @@ router.get("/:id", (req, res) => {
 
 // PUT /api/actions/:id
 router.put("/:id", (req, res) => {
-    db("actions")
-      .where("id", req.params.id)
-      .update(req.body)
-      .then(count => {
-        if (count === 0) {
-          res.status(404).json({
-            error: `An action with ID ${req.params.id} does not exist.`
+  db("actions")
+    .where("id", req.params.id)
+    .update(req.body)
+    .then(count => {
+      if (count === 0) {
+        res.status(404).json({
+          error: `An action with ID ${req.params.id} does not exist.`
+        });
+      } else {
+        db("actions")
+          .where("id", req.params.id)
+          .first()
+          .then(action => {
+            res.status(200).json(action);
           });
-        } else {
-          db("actions")
-            .where("id", req.params.id)
-            .first()
-            .then(action => {
-              res.status(200).json(action);
-            });
-        }
-      })
-      .catch(err => {
-        res.status(500).send("There was an error updating the project.");
-      });
-  });
+      }
+    })
+    .catch(err => {
+      res.status(500).send("There was an error updating the project.");
+    });
+});
 
 // DELETE /api/actions/:id
+router.delete("/:id", (req, res) => {
+  db("actions")
+    .where("id", req.params.id)
+    .del()
+    .then(count => {
+      if (count === 0) {
+        res
+          .status(404)
+          .json({
+            error: `An action with ID ${req.params.id} does not exist.`
+          });
+      } else {
+        res.status(204).end();
+      }
+    })
+    .catch(err => {
+      res.status(500).send("There was an error deleting the data.");
+    });
+});
 
 module.exports = router;
